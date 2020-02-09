@@ -203,41 +203,77 @@ print(r_v)
 
 #程序下单
 if(int(index) == 1):
-    f1_haiTong = open(buyShare_file,"r")  
-    lines_haiTong = f1_haiTong.readlines()
-    num_haiTong = len(lines_haiTong)
-    code_haiTong = lines_haiTong[0][:-1]
-    f1_haiTong.close()
+    f1_TDX = open(buyShare_file,"r")  
+    lines_TDX = f1_TDX.readlines()
+    num_TDX = len(lines_TDX)
+    code_TDX = lines_TDX[0][:-1]
+    f1_TDX.close()
 
-    if(num_haiTong == 1) and (code_haiTong != "9527"):
-        #haiTong
-        app_haiTong = Application().connect(path = r"C:\new_haitong\TdxW.exe")
-        dlg_haiTong = app_haiTong.window_(title_re = ".*海通.*")
-        dlg_haiTong.ClickInput(button=u'left')
+    print('GOOD LUCK!')
+    
+    #TDX
+    app_TDX = Application().connect(path = r"D:\new_jyplug\TdxW.exe")
+    dlg_TDX = app_TDX.window_(title_re = ".*通达信.*")
+    dlg_TDX.ClickInput(button=u'left')
+    rectangle = dlg_TDX.Rectangle()
+    #选项菜单坐标
+    xuanXiangLeft = rectangle.right - rectangle.left - 314 #150长江证券
+    xuanXiangTop = 26
+    
+    #断开行情主站
+    dlg_TDX.ClickInput(button=u'left', coords=(xuanXiangLeft, xuanXiangTop))    
+    for down in range(4):
+        k.tap_key(k.down_key)
+    k.tap_key(k.enter_key)
+    #连接行情主站
+    dlg_TDX.ClickInput(button=u'left', coords=(xuanXiangLeft, xuanXiangTop))
+    k.tap_key(k.down_key)
+    k.tap_key(k.enter_key)
+    k.tap_key(k.enter_key)
+    
+    if(num_TDX == 1) and (code_TDX != "9527"):        
+        dlg_TDX.ClickInput(button=u'left')
         #k.tap_key(k.function_keys[6], 1)
-        rectangle = dlg_haiTong.Rectangle()
+        rectangle = dlg_TDX.Rectangle()
         right = rectangle.right - rectangle.left - 119
-        bottom  = rectangle.bottom - rectangle.top - 12
-        dlg_haiTong.ClickInput(button=u'left', coords=(right, bottom))
-        k.type_string(code_haiTong)
+        bottom  = rectangle.bottom - rectangle.top - 16
+        dlg_TDX.ClickInput(button=u'left', coords=(right, bottom))
+        k.type_string(code_TDX)
         k.tap_key(k.enter_key)
-        dlg_haiTong.ClickInput(button=u'left', coords=((rectangle.right - rectangle.left - 400), 400))
-        dlg_haiTong.ClickInput(button=u'left', coords=(right, bottom))
+        dlg_TDX.ClickInput(button=u'left', coords=((rectangle.right - rectangle.left - 400), 400))
+        dlg_TDX.ClickInput(button=u'left', coords=(right, bottom))
         k.type_string("221")
         k.tap_key(k.enter_key)
         '''
-        dlg_haiTong[u'买入下单'].ClickInput(button=u'left')        
+        dlg_TDX[u'买入下单'].ClickInput(button=u'left')        
         k.tap_key(k.enter_key)
         #time.sleep(.1)
         k.tap_key(k.space_key)
         #time.sleep(.1)
         k.tap_key(k.space_key)
         '''
-        #dlg_haiTongIO = app_haiTong[u'提示']
-        #result = app_haiTong[u'提示'].Wait("exists",1 ,1)
+        #dlg_TDXIO = app_TDX[u'提示']
+        #result = app_TDX[u'提示'].Wait("exists",1 ,1)
         #if(result == 1):
-        #    dlg_haiTongIO[u'确认'].CloseClick(button=u'left')
+        #    dlg_TDXIO[u'确认'].CloseClick(button=u'left')
 
+    #通达信添加 缠通套利 指标
+    dlg_TDX.ClickInput(button=u'left')    
+    dlg_TDX.ClickInput(button=u'right', coords=((rectangle.right - rectangle.left - 700), (rectangle.bottom - rectangle.top - 700)))
+    k.tap_key(k.down_key)
+    k.tap_key(k.down_key)         
+    k.tap_key(k.right_key)
+    k.tap_key(k.down_key)   
+    k.tap_key(k.down_key)   
+    k.tap_key(k.enter_key)
+    #dlg_CTTL = app[u'请选择指标']
+    for down in range(38):
+        k.tap_key(k.down_key)
+    k.tap_key(k.right_key)
+    k.tap_key(k.down_key)   
+    k.tap_key(k.down_key) 
+    k.tap_key(k.enter_key)
+    
 #if(getCurrentTimeInt() < jingJiaOverTime+jingJiaTimeOffset):
 if (int(index) < 2):
     saveData(dlg, zhuliTabLeft, tabTop, infoleftOffset, infoTopOffset, zhuliFile)
@@ -258,4 +294,13 @@ dlg.ClickInput(button=u'left', coords=(thsjl_right, thsjl_bottom))
 k.type_string(".001") 
 k.tap_key(k.enter_key)
 
-
+#调取大单净量分时
+dlg.ClickInput(button=u'right', coords=(int(ths_rectangle.right/2), int(ths_rectangle.bottom/2+55)))
+downOrder = 12
+for down in range(downOrder):
+    k.tap_key(k.down_key)
+k.tap_key(k.enter_key)
+dlg_XZZB = app[u'请选择指标']
+for down in range(21):
+    k.tap_key(k.down_key)
+dlg_XZZB[u'确定'].ClickInput(button=u'left')
