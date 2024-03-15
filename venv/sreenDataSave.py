@@ -373,7 +373,7 @@ if(int(index) != 0):
     rectangle = dlg_TDX.Rectangle()
     
     
-    
+    '''
     if(getCurrentTimeInt() > marketCloseTime):
         #净买比
         jingMaiBiLeft = rectangle.right - rectangle.left - 1268
@@ -381,20 +381,28 @@ if(int(index) != 0):
         dlg_TDX.click_input(button=u'left', coords=(jingMaiBiLeft, jingMaiBiTop))
         time.sleep(.2)
         dlg_TDX.click_input(button=u'left', coords=(jingMaiBiLeft, 200))
+        time.sleep(.5)
         #shuju_TDX = app_TDX.window_(title_re = ".*数据导出.*")
         right = rectangle.right - rectangle.left - 100
         bottom  = rectangle.bottom - rectangle.top - 16
         dlg_TDX.click_input(button=u'left', coords=(right, bottom))
+        time.sleep(.5)
         k.type_string("34")
         k.tap_key(k.enter_key)
+        time.sleep(.5)
         
+        #d:\share\zhangting_20240315.txt
         dlg_SJDC = dlg_TDX[u'数据导出']
+        #dlg_SJDC.click_input(button=u'left', coords=(1, 1))
+        time.sleep(.5)
         dlg_SJDC[u'所有数据(显示列开始所有栏目)'].click_input(button=u'left')
+        time.sleep(.5)
         dlg_SJDC[u'导出'].click_input(button=u'left')
+        #k.tap_key(k.enter_key)
         
         time.sleep(60)
         k.tap_key(k.enter_key)
-    
+    '''
     
     #选项菜单坐标
     xuanXiangLeft = rectangle.right - rectangle.left - 415 #470 #1980 #150长江证券 314金融终端 2250
