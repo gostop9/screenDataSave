@@ -103,6 +103,7 @@ def saveData(dlg, tabLeft, tabTop, infoLeft, infoTop, fileName):
     dlg.ClickInput(button=u'right', coords=(infoLeft, infoTop))
 
     if(fileName.find('bk') >= 0):
+        time.sleep(.5)
         downOrder = 6
     if(fileName.find('bkzj') >= 0):
         downOrder = 6
@@ -187,9 +188,9 @@ buyShare_file = 'D:/share/buyShare.txt'
 if os.path.exists(buyShare_file): # 如果文件存在
     os.remove(buyShare_file) # 则删除
 
-jingJiaOverTime = 92500
-marketStartTime = 93000
-marketCloseTime = 151000
+jingJiaOverTime = 92690
+marketStartTime = 92690
+marketCloseTime = 153100
 jingJiaTimeOffset = 5
 
 app = Application().connect(path = r"C:\同花顺软件\同花顺\hexin.exe")
@@ -215,7 +216,7 @@ k.tap_key(k.function_keys[6], 1)
 #time.sleep(.1)
 
 #点击“个股”按钮
-dlg['Button30'].ClickInput(button=u'left')
+dlg['Button32'].ClickInput(button=u'left')
 
 dlgFrame = dlg.AfxFrameOrView42s
 
@@ -287,7 +288,7 @@ if(getCurrentTimeInt() > marketCloseTime):
 
 if (int(index) > 1):
     #点击“板块”按钮
-    dlg['Button29'].ClickInput(button=u'left')
+    dlg['Button31'].ClickInput(button=u'left')
     #save bankuai data
     bkzjOffset     = 200#260
     bkzcOffset     = 270#350
@@ -315,12 +316,12 @@ k.tap_key(k.enter_key)
 
 #调取大单净量分时
 dlg.ClickInput(button=u'right', coords=(int(ths_rectangle.right/2), int(ths_rectangle.bottom/2+89)))
-downOrder = 8
+downOrder = 7
 for down in range(downOrder):
     k.tap_key(k.up_key)
 k.tap_key(k.enter_key)
 dlg_XZZB = app[u'请选择指标']
-for down in range(22):
+for down in range(25):
     k.tap_key(k.down_key)
 dlg_XZZB[u'确定'].ClickInput(button=u'left')
 
@@ -365,25 +366,49 @@ if(int(index) != 0):
     
     
     #TDX
-    app_TDX = Application().connect(path = r"D:\Doc\Stock\TDX_KXG\Tdxw.exe")
+    #app_TDX = Application().connect(path = r"F:\new_tdx\Tdxw.exe")
+    app_TDX = Application().connect(class_name = "TdxW_MainFrame_Class")
     dlg_TDX = app_TDX.window_(title_re = ".*通达信.*") #通达信 #金长江
-    dlg_TDX.ClickInput(button=u'left')
+    dlg_TDX.click_input(button=u'left')
     rectangle = dlg_TDX.Rectangle()
     
     
+    
+    if(getCurrentTimeInt() > marketCloseTime):
+        #净买比
+        jingMaiBiLeft = rectangle.right - rectangle.left - 1268
+        jingMaiBiTop = 52
+        dlg_TDX.click_input(button=u'left', coords=(jingMaiBiLeft, jingMaiBiTop))
+        time.sleep(.2)
+        dlg_TDX.click_input(button=u'left', coords=(jingMaiBiLeft, 200))
+        #shuju_TDX = app_TDX.window_(title_re = ".*数据导出.*")
+        right = rectangle.right - rectangle.left - 100
+        bottom  = rectangle.bottom - rectangle.top - 16
+        dlg_TDX.click_input(button=u'left', coords=(right, bottom))
+        k.type_string("34")
+        k.tap_key(k.enter_key)
+        
+        dlg_SJDC = dlg_TDX[u'数据导出']
+        dlg_SJDC[u'所有数据(显示列开始所有栏目)'].click_input(button=u'left')
+        dlg_SJDC[u'导出'].click_input(button=u'left')
+        
+        time.sleep(60)
+        k.tap_key(k.enter_key)
+    
+    
     #选项菜单坐标
-    xuanXiangLeft = rectangle.right - rectangle.left - 280 #470 #1980 #150长江证券 314金融终端 2250
+    xuanXiangLeft = rectangle.right - rectangle.left - 415 #470 #1980 #150长江证券 314金融终端 2250
     xuanXiangTop = 17
     
     #断开行情主站
-    dlg_TDX.ClickInput(button=u'left', coords=(xuanXiangLeft, xuanXiangTop))   
+    dlg_TDX.click_input(button=u'left', coords=(xuanXiangLeft, xuanXiangTop))   
     k.tap_key(k.down_key)
     #k.tap_key(k.enter_key)
     for down in range(3):
         k.tap_key(k.down_key)
     k.tap_key(k.enter_key)
     #连接行情主站
-    dlg_TDX.ClickInput(button=u'left', coords=(xuanXiangLeft, xuanXiangTop))
+    dlg_TDX.click_input(button=u'left', coords=(xuanXiangLeft, xuanXiangTop))
     k.tap_key(k.down_key)
     #k.tap_key(k.enter_key)
     #for down in range(5):
@@ -516,7 +541,7 @@ if(getCurrentTimeInt() > marketCloseTime):
         lists.append(list)
         i = i + 1    
     mark_change('D:/Doc/Stock/TDX_KXG/T0002/mark.dat', lists)
-    mark_change('D:/new_jyplug/T0002/mark.dat', lists)
+    mark_change('F:/new_tdx/T0002/mark.dat', lists)
     
     modifyCfgFile(date, index)
     r_v = os.system(main)
