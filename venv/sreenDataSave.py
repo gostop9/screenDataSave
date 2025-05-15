@@ -83,8 +83,25 @@ def saveData(dlg, tabLeft, tabTop, infoLeft, infoTop, fileName):
     dlg.ClickInput(button=u'left', coords=(tabLeft, tabTop))
     #time.sleep(.1)
     #涨幅板块先按“涨幅”排序
-    #if(fileName.find('zhangfu') >= 0):
+    '''
+    if(fileName.find('zhangfu') >= 0):
         #dlg.ClickInput(button=u'left', coords=(540, 125))#涨幅
+        dlg.ClickInput(button=u'left', coords=(infoLeft, infoTop))
+        #k.tap_key(k.down_key, n=5000, interval=0.01)
+        k.tap_key(k.page_down_key)
+        time.sleep(1)
+        k.tap_key(k.page_down_key)
+        time.sleep(1)
+        k.tap_key(k.page_down_key)
+        time.sleep(1)
+        k.tap_key(k.page_down_key)
+        #k.press_key(k.down_key)
+        #time.sleep(10)
+        #k.release_key(k.down_key)
+        #for number in range(5200):
+        #    k.tap_key(k.down_key, n=5000, interval=0.01)
+        #    time.sleep(0.001)
+    '''
     #财务板块先按“买入信号”排序
     if(fileName.find('caiwu') >= 0):
         #dlg.ClickInput(button=u'left', coords=(920, 125))#买入信号
@@ -159,6 +176,8 @@ def modifyCfgFile(date, index):
     tomorrow = str(int(date.strip('_'), 10) + 1) + '_\n'
     lines[0] = tomorrow
     lines[1] = '0\n'
+    lines[14] = lines[13]
+    lines[13] = lines[12]
     lines[12] = date + index + '\n'
     f2.writelines(lines)
     f2.close()
@@ -190,7 +209,7 @@ if os.path.exists(buyShare_file): # 如果文件存在
 
 jingJiaOverTime = 92690
 marketStartTime = 92690
-marketCloseTime = 153100
+marketCloseTime = 150100
 jingJiaTimeOffset = 5
 
 app = Application().connect(path = r"C:\同花顺软件\同花顺\hexin.exe")
@@ -216,7 +235,7 @@ k.tap_key(k.function_keys[6], 1)
 #time.sleep(.1)
 
 #点击“个股”按钮
-dlg['Button32'].ClickInput(button=u'left')
+dlg['Button33'].ClickInput(button=u'left')
 
 dlgFrame = dlg.AfxFrameOrView42s
 
@@ -288,7 +307,8 @@ if(getCurrentTimeInt() > marketCloseTime):
 
 if (int(index) > 1):
     #点击“板块”按钮
-    dlg['Button31'].ClickInput(button=u'left')
+    dlg['Button32'].ClickInput(button=u'left')
+    time.sleep(5)
     #save bankuai data
     bkzjOffset     = 200#260
     bkzcOffset     = 270#350
@@ -316,7 +336,7 @@ k.tap_key(k.enter_key)
 
 #调取大单净量分时
 dlg.ClickInput(button=u'right', coords=(int(ths_rectangle.right/2), int(ths_rectangle.bottom/2+89)))
-downOrder = 7
+downOrder = 8
 for down in range(downOrder):
     k.tap_key(k.up_key)
 k.tap_key(k.enter_key)
@@ -368,16 +388,16 @@ if(int(index) != 0):
     #TDX
     #app_TDX = Application().connect(path = r"F:\new_tdx\Tdxw.exe")
     app_TDX = Application().connect(class_name = "TdxW_MainFrame_Class")
-    dlg_TDX = app_TDX.window_(title_re = ".*通达信.*") #通达信 #金长江
+    dlg_TDX = app_TDX.window(title_re = ".*通达信.*") #通达信 #金长江
     dlg_TDX.click_input(button=u'left')
-    rectangle = dlg_TDX.Rectangle()
+    rectangle = dlg_TDX.rectangle()
     
     
     if(getCurrentTimeInt() > marketCloseTime):
         #净买比
         jingMaiBiLeft = rectangle.right - rectangle.left - 1268
-        jingMaiBiTop = 52
-        dlg_TDX.click_input(button=u'left', coords=(jingMaiBiLeft, jingMaiBiTop))
+        #jingMaiBiTop = 52
+        #dlg_TDX.click_input(button=u'left', coords=(jingMaiBiLeft, jingMaiBiTop))
         time.sleep(.2)
         dlg_TDX.click_input(button=u'left', coords=(jingMaiBiLeft, 200))
         time.sleep(.5)
@@ -400,11 +420,17 @@ if(int(index) != 0):
             time.sleep(.5)
             dlg_SJDC[u'导出'].click_input(button=u'left')
             #k.tap_key(k.enter_key)
-
+        
+        #https://www.kancloud.cn/gnefnuy/pywinauto_doc/1193049
+        #wait_for –等待窗口进入的状态。它可以是以下任何状态，也可以按空格组合状态。 'exists'表示窗口是有效的句柄。 'visible'表示窗口未隐藏。 'enabled'表示窗口未被禁用。 'ready'表示窗口可见并已启用。 'active'表示窗口处于活动状态
+        #wait_for_not –等待窗口不在的状态。它可以是以下任何状态，也可以通过空格组合状态。 'exists'表示窗口是有效的句柄。 'visible'表示窗口未隐藏。 'enabled'表示窗口未被禁用。 'ready'表示窗口可见并已启用。 'active'表示窗口处于活动状态
+        #dlg_TDX_SXSJ = app_TDX[u'刷新数据']
+        #result = dlg_TDX_SXSJ.wait_not("exists", 80, 80)
         dlg_TDXW = app_TDX[u'TdxW']
-        result = app_TDX[u'TdxW'].Wait("exists", 10, 10)
+        result = app_TDX[u'TdxW'].wait("exists enabled visible ready", 10, 100)
+        #result = app_TDX[u'TdxW'].Wait_not("exists", 10, 20)
         if(result != 0):
-            dlg_TDXW[u'取消'].CloseClick(button=u'left')
+            dlg_TDXW[u'取消'].close_click(button=u'left')
             #k.tap_key(k.enter_key)
         time.sleep(.5)
         #k.tap_key(k.enter_key)
@@ -556,6 +582,11 @@ if(getCurrentTimeInt() > marketCloseTime):
         i = i + 1    
     mark_change('D:/Doc/Stock/TDX_KXG/T0002/mark.dat', lists)
     mark_change('F:/new_tdx/T0002/mark.dat', lists)
+    
+    #
+    fzhangtingConfig = open("D:/share/zhangTingConfig.txt", "a")
+    fzhangtingConfig.write(string + '_2\n')
+    fzhangtingConfig.close()
     
     modifyCfgFile(date, index)
     r_v = os.system(main)
