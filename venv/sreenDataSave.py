@@ -79,7 +79,7 @@ def mark_change(fileName, lists):
     return list
                     
 def saveData(dlg, tabLeft, tabTop, infoLeft, infoTop, fileName):    
-    downOrder = 6
+    downOrder = 8
     dlg.ClickInput(button=u'left', coords=(tabLeft, tabTop))
     #time.sleep(.1)
     #涨幅板块先按“涨幅”排序
@@ -106,26 +106,26 @@ def saveData(dlg, tabLeft, tabTop, infoLeft, infoTop, fileName):
     if(fileName.find('caiwu') >= 0):
         #dlg.ClickInput(button=u'left', coords=(920, 125))#买入信号
         dlg.ClickInput(button=u'left', coords=(740, 100))#买入信号
-        downOrder = 6
+        #downOrder = 7
         #time.sleep(.1)
     if(fileName.find('zhangting') >= 0):
         #dlg.ClickInput(button=u'left', coords=(1080, 125))#封成比
-        downOrder = 6
+        downOrder = 8
         #time.sleep(.1)
     if(fileName.find('zijin') >= 0):
-        downOrder = 6
+        downOrder = 8
     if(fileName.find('zhuli') >= 0):
-        downOrder = 6
+        downOrder = 8
         #time.sleep(.1)
     dlg.ClickInput(button=u'right', coords=(infoLeft, infoTop))
 
     if(fileName.find('bk') >= 0):
         time.sleep(.5)
-        downOrder = 6
+        #downOrder = 7
     if(fileName.find('bkzj') >= 0):
-        downOrder = 6
+        downOrder = 8
     if(fileName.find('bkzc') >= 0):
-        downOrder = 6
+        downOrder = 8
     time.sleep(.1)
     k.tap_key(k.right_key)
     for down in range(downOrder):
@@ -133,9 +133,11 @@ def saveData(dlg, tabLeft, tabTop, infoLeft, infoTop, fileName):
     k.tap_key(k.right_key)
     k.tap_key(k.enter_key)
 
-    dlgIO = app[u'导入导出对话框模板']
+    dlgIO = app[u'数据导出']
 
     k.type_string(fileName)
+    
+    dlgIO[u'不转换'].ClickInput(button=u'left')
 
     dlgIO[u'下一步(N)'].ClickInput(button=u'left')
     #time.sleep(.1)
@@ -176,9 +178,10 @@ def modifyCfgFile(date, index):
     tomorrow = str(int(date.strip('_'), 10) + 1) + '_\n'
     lines[0] = tomorrow
     lines[1] = '0\n'
-    lines[14] = lines[13]
-    lines[13] = lines[12]
-    lines[12] = date + index + '\n'
+    lines[12] = lines[13]
+    lines[13] = lines[14]
+    lines[14] = lines[15]
+    lines[15] = date + index + '\n'
     f2.writelines(lines)
     f2.close()
     
@@ -235,7 +238,7 @@ k.tap_key(k.function_keys[6], 1)
 #time.sleep(.1)
 
 #点击“个股”按钮
-dlg['Button33'].ClickInput(button=u'left')
+dlg['Button33'].ClickInput(button=u'left') #Button34
 
 dlgFrame = dlg.AfxFrameOrView42s
 
@@ -263,9 +266,9 @@ zhangtingFile   = path + "zhangting_" + "THS_"   + tail
 topOffset   = 80#105
 leftOffset  = 60
 ddeOffset   = 160
-zijinOffset = 260#340#260
-zhuliOffset = 360#430#360
-caiwuOffset = 440#520#440
+zijinOffset = 420#340#260
+zhuliOffset = 490#430#360
+caiwuOffset = 560#520#440
 zhangfuOffset = 520
 zhangtingOffset = 130#160
 #left = ths_rectangle.left
@@ -310,8 +313,8 @@ if (int(index) > 1):
     dlg['Button32'].ClickInput(button=u'left')
     time.sleep(5)
     #save bankuai data
-    bkzjOffset     = 200#260
-    bkzcOffset     = 270#350
+    bkzjOffset     = 270#260
+    bkzcOffset     = 350#350
     bkrdTabLeft    = leftOffset
     bkzjTabLeft    = bkzjOffset
     bkzcTabLeft    = bkzcOffset
@@ -330,8 +333,11 @@ if(getCurrentTimeInt() > jingJiaOverTime+jingJiaTimeOffset):
 
 thsjl_right = ths_rectangle.right - ths_rectangle.left - 120
 thsjl_bottom = bottom  = ths_rectangle.bottom - ths_rectangle.top - 10
+
 dlg.ClickInput(button=u'left', coords=(thsjl_right, thsjl_bottom))
 k.type_string(".001") 
+k.tap_key(k.enter_key)
+k.type_string("000002") 
 k.tap_key(k.enter_key)
 
 #调取大单净量分时
@@ -341,7 +347,7 @@ for down in range(downOrder):
     k.tap_key(k.up_key)
 k.tap_key(k.enter_key)
 dlg_XZZB = app[u'请选择指标']
-for down in range(25):
+for down in range(27):
     k.tap_key(k.down_key)
 dlg_XZZB[u'确定'].ClickInput(button=u'left')
 
@@ -453,6 +459,7 @@ if(int(index) != 0):
     #k.tap_key(k.enter_key)
     #for down in range(5):
     #    k.tap_key(k.down_key)
+    k.tap_key(k.enter_key)
     k.tap_key(k.enter_key)
     k.tap_key(k.enter_key)
     
